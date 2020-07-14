@@ -59,4 +59,13 @@ public class Employee {
     public void setTeamLead(Employee teamLead) {
         this.teamLead = teamLead;
     }
+
+    @Override
+    public String toString() {
+        return name + ", " +
+                gender + ", monthly salary " +
+                salary + ", " +
+                department + ", " +
+                teamLead;
+    }
 }

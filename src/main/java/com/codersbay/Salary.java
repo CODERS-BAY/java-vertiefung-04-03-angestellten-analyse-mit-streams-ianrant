@@ -26,4 +26,8 @@ public class Salary {
         this.bruttoMonthly = bruttoMonthly;
     }
 
+    @Override
+    public String toString() {
+        return nettoMonthly + " (" + bruttoMonthly + ")";
+    }
 }
