@@ -1,6 +1,6 @@
 package com.codersbay;
 
-public class Employee {
+public class Employee implements Comparable {
 
     private String name;
     private Gender gender;
@@ -68,4 +68,17 @@ public class Employee {
                 department + ", " +
                 teamLead;
     }
+
+    @Override
+    public int compareTo(Object o) {
+        Employee e = (Employee) o;
+        if (this.getSalary().getBruttoMonthly() > e.getSalary().getBruttoMonthly()) {
+            return 1;
+        }
+        if (this.getSalary().getBruttoMonthly() == e.getSalary().getBruttoMonthly()) {
+            return 0;
+        }
+        return -1;
+    }
+
 }

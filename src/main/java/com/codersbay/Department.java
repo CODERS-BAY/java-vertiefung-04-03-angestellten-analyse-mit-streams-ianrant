@@ -1,5 +1,7 @@
 package com.codersbay;
 
+import java.util.Objects;
+
 public class Department {
 
     private Integer id;
@@ -29,5 +31,19 @@ public class Department {
     @Override
     public String toString() {
         return id + ", " + name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Department)) return false;
+        Department that = (Department) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName());
     }
 }

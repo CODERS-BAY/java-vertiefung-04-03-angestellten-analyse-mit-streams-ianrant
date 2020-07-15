@@ -5,4 +5,9 @@ public enum Gender {
     FEMALE,
     OTHER;
 
+
+    public static Gender[] getGenders() {
+        return new Gender[]{MALE, FEMALE, OTHER};
+
+    }
 }
