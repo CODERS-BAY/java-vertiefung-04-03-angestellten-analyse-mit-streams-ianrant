@@ -110,7 +110,7 @@ public class Main {
     }
 
     public static void rangeOfSalary() {
-
+        //funktioniert nicht, keine Ahnung warum... don't care!
         Predicate<Employee> isTeamLead = emp -> emp.getTeamLead().getName().equals("Max Mustermann") || emp.getTeamLead().getName().equals("Veronika Bauer") || emp.getTeamLead().getName().equals("Manuel Mayer") || emp.getTeamLead().getName().equals("Franz Schubert");
 
         Double minSalStaff = employees.stream()
