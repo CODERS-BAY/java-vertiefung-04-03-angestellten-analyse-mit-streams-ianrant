@@ -110,34 +110,67 @@ public class Main {
     }
 
     public static void rangeOfSalary() {
-        //funktioniert nicht, keine Ahnung warum... don't care!
-        Predicate<Employee> isTeamLead = emp -> emp.getTeamLead().getName().equals("Max Mustermann") || emp.getTeamLead().getName().equals("Veronika Bauer") || emp.getTeamLead().getName().equals("Manuel Mayer") || emp.getTeamLead().getName().equals("Franz Schubert");
 
-        Double minSalStaff = employees.stream()
+        System.out.println("\nrange of salaries within company");
+        List<Employee> searchForCEO = employees.stream()
+                .filter(person -> person.getTeamLead() == null)
+                .collect(Collectors.toList());
+        Employee ceo = searchForCEO.get(0);
+
+        Predicate<Employee> isTeamLead = emp -> emp.getTeamLead() == ceo || emp.getTeamLead() == null;
+
+        Double minNetSalStaff = employees.stream()
                 .filter(isTeamLead.negate())
                 .mapToDouble(emp -> emp.getSalary().getNettoMonthly())
                 .min().getAsDouble();
-        System.out.println(minSalStaff + " is the lowest net salary of the staff");
+        System.out.println(minNetSalStaff + " is the lowest net salary of the staff");
 
-
-        Double maxSalStaff = employees.stream()
+        Double maxNetSalStaff = employees.stream()
                 .filter(isTeamLead.negate())
                 .mapToDouble(emp -> emp.getSalary().getNettoMonthly())
+                .max().getAsDouble();
+        System.out.println(maxNetSalStaff + " is the highest net salary of the staff");
+
+
+        Double minGrossSalStaff = employees.stream()
+                .filter(isTeamLead.negate())
+                .mapToDouble(emp -> emp.getSalary().getBruttoMonthly())
                 .min().getAsDouble();
-        System.out.println(maxSalStaff + " is the highest net salary of the staff");
+        System.out.println(minGrossSalStaff + " is the lowest gross salary of the staff");
 
 
-        Double minSalLead = employees.stream()
+        Double maxGrossSalStaff = employees.stream()
+                .filter(isTeamLead.negate())
+                .mapToDouble(emp -> emp.getSalary().getBruttoMonthly())
+                .max().getAsDouble();
+        System.out.println(maxGrossSalStaff + " is the highest gross salary of the staff");
+        ////////////////
+
+        Double minNetSalLead = employees.stream()
                 .filter(isTeamLead)
                 .mapToDouble(emp -> emp.getSalary().getNettoMonthly())
                 .min().getAsDouble();
-        System.out.println(minSalLead + " is the lowest net salary of the leads");
+        System.out.println(minNetSalLead + " is the lowest net salary of the leads");
 
-        Double maxSalLead = employees.stream()
+        Double maxNetSalLead = employees.stream()
                 .filter(isTeamLead)
                 .mapToDouble(emp -> emp.getSalary().getNettoMonthly())
+                .max().getAsDouble();
+        System.out.println(maxNetSalLead + " is the highest net salary of the leads");
+
+        Double minGrossSalLead = employees.stream()
+                .filter(isTeamLead)
+                .mapToDouble(emp -> emp.getSalary().getBruttoMonthly())
                 .min().getAsDouble();
-        System.out.println(maxSalLead + " is the highest net salary of the leads");
+        System.out.println(minGrossSalLead + " is the lowest gross salary of the leads");
+
+        Double maxGrossSalLead = employees.stream()
+                .filter(isTeamLead)
+                .mapToDouble(emp -> emp.getSalary().getBruttoMonthly())
+                .max().getAsDouble();
+        System.out.println(maxGrossSalLead + " is the highest gross salary of the leads");
+
+
     }
 
     public static void main(String[] args) {
