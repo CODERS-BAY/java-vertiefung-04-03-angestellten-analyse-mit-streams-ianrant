@@ -1,9 +1,6 @@
 package com.codersbay;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -17,10 +14,19 @@ public class Main {
         // AUFGABE 1 - ver 1
         // find the CEO
         System.out.println("\nfind CEO - version 1:");
-        List<Employee> searchForCEO = employees.stream()
-                .filter(person -> person.getTeamLead() == null && person.getName().equals("Max Mustermann"))
-                .collect(Collectors.toList()); // sammelt alle Objekte und überträgt sie in die Liste
-        searchForCEO.forEach(System.out::println);
+        Optional<Employee> searchForCEO =
+                employees.stream()
+                        .filter(person -> person.getTeamLead() == null)
+                        .findFirst();
+        // if Optionals are applied, there is no need for collect()
+        //.collect(Collectors.toList()); // sammelt alle Objekte und überträgt sie in die Liste
+        if (searchForCEO.isPresent()) {
+            Employee CEO = searchForCEO.get();
+            System.out.println(CEO);
+        } else {
+            System.out.println("No CEO found!");
+        }
+        // isEmpty() ist gegenstück zu isPresent()
     }
 
     public static void findCEOV2() {
@@ -29,8 +35,19 @@ public class Main {
         System.out.println("\nfind CEO - version 2:");
         System.out.println();
         employees.stream()
-                .filter(person -> person.getTeamLead() == null && person.getName().equals("Max Mustermann"))
+                .filter(person -> person.getTeamLead() == null)
                 .forEach(o -> System.out.println(o.getName() + ", " + o.getGender() + " " + o.getSalary()));
+    }
+
+    public static void findCEOV3() {
+        // AUFGABE 1 - ver 1
+        // find the CEO
+        System.out.println("\nfind CEO - version 3:");
+        List<Employee> searchForCEO =
+                employees.stream()
+                        .filter(person -> person.getTeamLead() == null)
+                        .collect(Collectors.toList()); // sammelt alle Objekte und überträgt sie in die Liste
+        searchForCEO.forEach(System.out::println);
     }
 
     public static void employeeSalary() {
@@ -42,18 +59,28 @@ public class Main {
                 .forEach(o -> System.out.println(o.getName() + ", " + o.getSalary()));
     }
 
-    public static void employeeSalaryAsc() {
-        // AUFGABE 3 (maybe try reverse?)
+    public static void employeeSalaryAscV1() {
+        // AUFGABE 3
         // alle Mitarbeiter und Gehalt, aufsteigend nach Gehalt
-        System.out.println("\nemployees and salary, ascending:");
+        System.out.println("\nemployees and salary, ascending according to salary:");
         employees.stream()
                 .sorted((o2, o1) -> Double.compare(o1.getSalary().getBruttoMonthly(), o2.getSalary().getBruttoMonthly()))
                 .forEach(o -> System.out.println(o.getName() + ", " + o.getSalary()));
     }
 
+    public static void employeeSalaryAscV2() {
+        // AUFGABE 3
+        // alle Mitarbeiter und Gehalt, aufsteigend nach Name
+        System.out.println("\nemployees and salary, ascending according to name:");
+        employees.stream()
+                .sorted((o2, o1) -> CharSequence.compare(o1.getName(), o2.getName()))
+                .forEach(o -> System.out.println(o.getName() + ", " + o.getSalary()));
+
+    }
+
     public static void showDepartmentsV1() {
         // AUFGABE 4 - v1
-        // all departments distinct !!!!! SORTED won't work - dunno y!
+        // all departments distinct
         System.out.println("\nunique department - version 1:");
         Set<Department> departmentSet = new HashSet<>();
         employees.stream()
@@ -73,11 +100,23 @@ public class Main {
                 .forEach(System.out::println);
     }
 
+    public static void showDepartmentsV3() {
+        // AUFGABE 4 - v3
+        // all departments distinct
+        System.out.println("\nunique department - version 3:");
+        Set<Department> departmentSet = new HashSet<>();
+        employees.stream()
+                .collect(Collectors.toSet());
+        departmentSet.forEach(System.out::println);
+    }
+
     public static void averageSalaryPerGender() {
         // AUFGABE 5
         // average salary per gender group
         System.out.println("\naverage wages per gender:");
-        for (Gender gender : Gender.getGenders()) {
+        // .values is applicable to an enum an returns all the values that it holds
+        // so it automatically delivers new enum values when they are added in the class
+        for (Gender gender : Gender.values()) {
             Double resultNet = employees.stream()
                     .filter(person -> person.getGender() == gender)
                     .mapToDouble(person -> person.getSalary().getNettoMonthly()).average().getAsDouble();
@@ -101,7 +140,7 @@ public class Main {
                 .collect(Collectors.toList());
 
         for (String department : departmentNames) {
-            for (Gender gender : Gender.getGenders()) {
+            for (Gender gender : Gender.values()) {
                 long count = employees.stream()
                         .filter(emp -> emp.getGender() == gender && emp.getDepartment().getName().equals(department)).count();
                 System.out.println("in dep " + department + " there are " + count + " " + gender.toString().toLowerCase() + " employees");
@@ -112,12 +151,12 @@ public class Main {
     public static void rangeOfSalary() {
 
         System.out.println("\nrange of salaries within company");
-        List<Employee> searchForCEO = employees.stream()
+        Optional<Employee> searchForCEO = employees.stream()
                 .filter(person -> person.getTeamLead() == null)
-                .collect(Collectors.toList());
-        Employee ceo = searchForCEO.get(0);
+                .findFirst();
+        Employee CEO = searchForCEO.get();
 
-        Predicate<Employee> isTeamLead = emp -> emp.getTeamLead() == ceo || emp.getTeamLead() == null;
+        Predicate<Employee> isTeamLead = emp -> emp.getTeamLead() == CEO || emp.getTeamLead() == null;
 
         Double minNetSalStaff = employees.stream()
                 .filter(isTeamLead.negate())
@@ -178,7 +217,8 @@ public class Main {
         findCEOV1();
         findCEOV2();
         employeeSalary();
-        employeeSalaryAsc();
+        employeeSalaryAscV1();
+        employeeSalaryAscV2();
         showDepartmentsV1();
         showDepartmentsV2();
         averageSalaryPerGender();
