@@ -1,5 +1,7 @@
 package com.codersbay;
 
+import java.util.Objects;
+
 public class Salary {
 
     private Double nettoMonthly;
@@ -26,4 +28,22 @@ public class Salary {
         this.bruttoMonthly = bruttoMonthly;
     }
 
+    @Override
+    public String toString() {
+        return nettoMonthly + " (" + bruttoMonthly + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Salary)) return false;
+        Salary salary = (Salary) o;
+        return Objects.equals(getNettoMonthly(), salary.getNettoMonthly()) &&
+                Objects.equals(getBruttoMonthly(), salary.getBruttoMonthly());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getNettoMonthly(), getBruttoMonthly());
+    }
 }
